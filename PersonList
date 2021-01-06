@@ -1,0 +1,46 @@
+import React from 'react';
+
+import axios from 'axios';
+
+let config = {
+  headers: { 
+    'x-rapidapi-key': '65c02a4672mshf6ff63121b66145p1777adjsn6a125a20822d', 
+    'x-rapidapi-host': 'alpha-vantage.p.rapidapi.com'},
+  params: {
+    function: 'GLOBAL_QUOTE', symbol: 'TSLA'
+  },
+}
+
+var obj;
+var response;
+var symbol;
+var open;
+var elements;
+
+export default class PersonList extends React.Component {
+  state = {
+    persons: []
+  }
+
+  componentDidMount() {
+    axios.get(`https://alpha-vantage.p.rapidapi.com/query`, config)
+      .then(res => {
+        obj = res.data;
+        response = obj[Object.keys(obj)[0]];
+        symbol = JSON.stringify(response[Object.keys(response)[0]]);
+        open = JSON.stringify(response[Object.keys(response)[1]]);
+        elements = {symbol: symbol, open: open}
+        const persons = elements;
+        this.setState({ persons });
+      })
+  }
+
+  render() {
+    return (
+      <ul>
+        <li>{ this.state.persons.symbol}</li>
+        <li>{ this.state.persons.open}</li>
+      </ul>
+    )
+  }
+}
